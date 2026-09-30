@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Reports - Expense Tracker{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Financial Reports & Analytics</h2>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-7">
+        <div class="card shadow-sm p-3">
+            <h5 class="card-title border-bottom pb-2">Annual Cashflow Trend</h5>
+            <div style="height: 350px;">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card shadow-sm p-3">
+            <h5 class="card-title border-bottom pb-2">Expense Category Breakdown</h5>
+            <div style="height: 350px;">
+                <canvas id="expensePieChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/reports.js') }}"></script>
+{% endblock %}

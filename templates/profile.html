@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Profile - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="card-title mb-4"><i class="fa-solid fa-user-gear me-2 text-primary"></i>Account Settings</h3>
+                <form method="POST" action="{{ url_for('profile') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="full_name" class="form-control" value="{{ current_user.full_name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email Address (Read Only)</label>
+                        <input type="email" class="form-control" value="{{ current_user.email }}" readonly disabled>
+                    </div>
+                    <hr class="my-4">
+                    <h5>Change Password</h5>
+                    <div class="mb-3">
+                        <label class="form-label">New Password</label>
+                        <input type="password" name="new_password" class="form-control" minlength="6" placeholder="Leave blank to keep unchanged">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" name="confirm_password" class="form-control" minlength="6" placeholder="Leave blank to keep unchanged">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

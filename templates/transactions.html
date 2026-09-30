@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Transactions - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Transactions History</h2>
+    <a href="{{ url_for('add_transaction') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i> Add Transaction</a>
+</div>
+
+<!-- Search / Filter Card -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('transactions') }}" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-select">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Type</label>
+                <select name="type" class="form-select">
+                    <option value="">All Types</option>
+                    <option value="income" {% if selected_type == 'income' %}selected{% endif %}>Income</option>
+                    <option value="expense" {% if selected_type == 'expense' %}selected{% endif %}>Expense</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">From</label>
+                <input type="date" name="start_date" class="form-control" value="{{ start_date or '' }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">To</label>
+                <input type="date" name="end_date" class="form-control" value="{{ end_date or '' }}">
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-secondary w-100"><i class="fa-solid fa-filter me-1"></i> Filter</button>
+                <a href="{{ url_for('transactions') }}" class="btn btn-outline-secondary">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Transaction Table -->
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in transactions %}
+                    <tr>
+                        <td>{{ t.date.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <span class="badge {{ 'badge-income' if t.type == 'income' else 'badge-expense' }}">
+                                {{ t.type.capitalize() }}
+                            </span>
+                        </td>
+                        <td><span class="badge bg-secondary">{{ t.category }}</span></td>
+                        <td>{{ t.description or '-' }}</td>
+                        <td class="fw-bold {{ 'text-success' if t.type == 'income' else 'text-danger' }}">
+                            {{ '+' if t.type == 'income' else '-' }}${{ "%.2f"|format(t.amount) }}
+                        </td>
+                        <td class="text-end">
+                            <a href="{{ url_for('edit_transaction', id=t.id) }}" class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pen"></i></a>
+                            <form method="POST" action="{{ url_for('delete_transaction', id=t.id) }}" class="d-inline" onsubmit="return confirm('Delete this transaction?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">No transactions matching criteria.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
